@@ -11,7 +11,7 @@ import { BigNumber } from 'ethers'
 chai.use(chaiBN(BigNumber))
 chai.use(smock.matchers)
 
-describe.only('Drawings', function () {
+describe('Drawings', function () {
   async function deployDrawings() {
     const [owner, user] = await ethers.getSigners()
     const usdToCreditRateBps = 100

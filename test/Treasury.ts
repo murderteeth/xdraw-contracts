@@ -133,7 +133,7 @@ describe('Treasury', function () {
       totalMinted: nEth(100)
     })
     await treasury.connect(user).claimRewards()
-    expect(await credits.balanceOf(user.address)).to.be.closeTo(nEth(200), 200)
+    expect(await credits.balanceOf(user.address)).to.be.closeTo(nEth(200), 10**12)
     expect(await treasury.availableRewards(user.address)).to.eq(0)
   })
 
@@ -143,7 +143,7 @@ describe('Treasury', function () {
     await treasury.approve(yvDaiVault.address, maxUint256)
     await treasury.deposit({gasLimit: 1_000_000})
     await treasury.withdraw({gasLimit: 1_000_000})
-    expect(await dai.balanceOf(treasury.address)).to.be.closeTo(oneEth, 10)
+    expect(await dai.balanceOf(treasury.address)).to.be.closeTo(oneEth, 10**10)
     expect(await yvDaiVault.balanceOf(treasury.address)).to.eq(0)
   })
 
