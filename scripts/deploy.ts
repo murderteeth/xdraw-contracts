@@ -3,7 +3,7 @@ import hre, { ethers, network } from 'hardhat'
 import addresses from '../addresses.json'
 
 async function main() {
-  // await hre.run('clean')
+  await hre.run('clean')
   await hre.run('compile')
 
   const [owner] = await ethers.getSigners()
@@ -11,7 +11,7 @@ async function main() {
   const yvdai = addresses[network.name as keyof typeof addresses].yvdai
   const usdToCreditRateBps = 100
 
-  console.log('deploy on', network.name)
+  console.log('network', network.name)
   console.log('dai', dai)
   console.log('yvdai', yvdai)
 
@@ -30,6 +30,11 @@ async function main() {
   await treasury.setVault(yvdai)
   console.log('treasury', treasury.address)
 
+  const drawingsFactory = await ethers.getContractFactory('Drawings')
+  const drawings = await drawingsFactory.deploy()
+  await drawings.setCredits(credits.address)
+  await credits.grantRole(await credits.SPENDER_ROLE(), drawings.address)
+  console.log('drawings', drawings.address)
 }
 
 main().catch((error) => {
