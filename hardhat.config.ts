@@ -35,10 +35,6 @@ const config: HardhatUserConfig = {
       url: process.env.MAINNET || '',
       accounts
     },
-    polygon: {
-      url: process.env.POLYGON || '',
-      accounts
-    },
     opera: {
       url: process.env.OPERA || '',
       accounts

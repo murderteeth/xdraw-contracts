@@ -3,7 +3,7 @@ import chaiBN from 'chai-bn'
 import { ethers } from 'hardhat'
 import { smock } from '@defi-wonderland/smock'
 import { loadFixture, time } from '@nomicfoundation/hardhat-network-helpers'
-import daiAddresses from '../addresses.dai.json'
+import addresses from '../addresses.json'
 import { nEth, oneEth } from './utils'
 import { Credits__factory, Drawings__factory } from '../typechain-types'
 import { BigNumber } from 'ethers'
@@ -17,7 +17,7 @@ describe('Drawings', function () {
     const usdToCreditRateBps = 100
 
     const creditsFactory = await smock.mock<Credits__factory>('Credits')
-    const credits = await creditsFactory.deploy(usdToCreditRateBps, daiAddresses.mainnet)
+    const credits = await creditsFactory.deploy(usdToCreditRateBps, addresses.hardhat.dai)
 
     const drawingsFactory = await smock.mock<Drawings__factory>('Drawings')
     const drawings = await drawingsFactory.deploy()

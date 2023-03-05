@@ -4,7 +4,7 @@ import { ethers } from 'hardhat'
 import { smock } from '@defi-wonderland/smock'
 import { loadFixture, time } from '@nomicfoundation/hardhat-network-helpers'
 import abi from '../abi'
-import daiAddresses from '../addresses.dai.json'
+import addresses from '../addresses.json'
 import { fakeDaiBalance, maxUint256, nEth, oneEth } from './utils'
 import { Credits__factory, Treasury__factory } from '../typechain-types'
 import { BigNumber } from 'ethers'
@@ -16,15 +16,15 @@ describe('Treasury', function () {
   async function deployTreasury() {
     const [owner, user, rando] = await ethers.getSigners()
     const usdToCreditRateBps = 100
-    const dai = (new ethers.Contract(daiAddresses.mainnet, abi.erc20)).connect(owner)
-    const yvDaiVault = (new ethers.Contract('0xdA816459F1AB5631232FE5e97a05BBBb94970c95', abi.vault)).connect(owner)
+    const dai = (new ethers.Contract(addresses.hardhat.dai, abi.erc20)).connect(owner)
+    const yvDaiVault = (new ethers.Contract(addresses.hardhat.yvdai, abi.vault)).connect(owner)
 
     const creditsFactory = await smock.mock<Credits__factory>('Credits')
-    const credits = await creditsFactory.deploy(usdToCreditRateBps, daiAddresses.mainnet)
+    const credits = await creditsFactory.deploy(usdToCreditRateBps, addresses.hardhat.dai)
     await credits.grantRole(await credits.SPENDER_ROLE(), owner.address)
 
     const treasuryFactory = await smock.mock<Treasury__factory>('Treasury')
-    const treasury = await treasuryFactory.deploy(daiAddresses.mainnet)
+    const treasury = await treasuryFactory.deploy(addresses.hardhat.dai)
 
     await credits.grantRole(await credits.REWARD_ROLE(), treasury.address)
     await treasury.setCredits(credits.address)

@@ -1,7 +1,7 @@
 import { expect } from 'chai'
 import { ethers } from 'hardhat'
 import { loadFixture } from '@nomicfoundation/hardhat-network-helpers'
-import daiAddresses from '../addresses.dai.json'
+import addresses from '../addresses.json'
 import {maxUint256, fakeDaiBalance, oneEth, nEth} from './utils'
 import { smock } from '@defi-wonderland/smock'
 import { Credits__factory } from '../typechain-types'
@@ -11,10 +11,10 @@ describe('Credits', function () {
   async function deployCredits() {
     const [owner, user, rando] = await ethers.getSigners()
     const usdToCreditRateBps = 100
-    const dai = (new ethers.Contract(daiAddresses.mainnet, abi.erc20)).connect(owner)
+    const dai = (new ethers.Contract(addresses.hardhat.dai, abi.erc20)).connect(owner)
 
     const creditsFactory = await smock.mock<Credits__factory>('Credits')
-    const credits = await creditsFactory.deploy(usdToCreditRateBps, daiAddresses.mainnet)
+    const credits = await creditsFactory.deploy(usdToCreditRateBps, addresses.hardhat.dai)
     await credits.grantRole(await credits.SPENDER_ROLE(), owner.address)
     await credits.grantRole(await credits.REWARD_ROLE(), owner.address)
 

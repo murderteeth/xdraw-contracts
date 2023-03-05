@@ -1,5 +1,5 @@
 import { ethers } from "hardhat"
-import daiAddresses from '../addresses.dai.json'
+import addresses from '../addresses.json'
 
 export const maxUint256 = '115792089237316195423570985008687907853269984665640564039457584007913129639935'
 
@@ -24,6 +24,6 @@ export const fakeDaiBalance = async (address: any, amount: any) => {
     ['uint256', 'uint256'],
     [address, slot])
   await setStorageAt(
-    daiAddresses.mainnet, 
+    addresses.hardhat.dai, 
     index, toBytes32(amount).toString())
 }
