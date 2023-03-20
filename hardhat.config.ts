@@ -10,7 +10,7 @@ const accounts = process.env.PRIVATE_KEY
 
 const config: HardhatUserConfig = {
   solidity: {
-    version: '0.8.9',
+    version: '0.8.12',
     settings: {
       outputSelection: {
         "*": {

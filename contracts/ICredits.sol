@@ -1,5 +1,5 @@
 //SPDX-License-Identifier: MIT
-pragma solidity ^0.8.9;
+pragma solidity ^0.8.12;
 
 interface ICredits {
   function decimals() external pure returns (uint16);

@@ -11,6 +11,13 @@ import { BigNumber } from 'ethers'
 chai.use(chaiBN(BigNumber))
 chai.use(smock.matchers)
 
+const fake = {
+  cid: {
+    a: 'QmWATWQ7fVPP2EFGu71UkfnqhYXDYH566qy47CnJDgvs8u',
+    b: 'bafybeififz5x77to5hsmeagt5cufv2a7mqxhlomhd2idez2xhf3wdwfani'
+  }
+}
+
 describe('Drawings', function () {
   async function deployDrawings() {
     const [owner, user] = await ethers.getSigners()
@@ -36,13 +43,24 @@ describe('Drawings', function () {
   it('Reverts if you don\'t have enough credits', async function () {
     const { credits, drawings, user } = await loadFixture(deployDrawings)
     await credits.setVariable('minted', { [user.address]: 0 })
-    await expect(drawings.mint()).to.revertedWith('!balance')
+    await expect(drawings.mint(fake.cid.a)).to.revertedWith('!balance')
   })
 
   it('Mints drawings', async function () {
     const { credits, drawings, user } = await loadFixture(deployDrawings)
     await credits.setVariable('minted', { [user.address]: oneEth })
-    await drawings.connect(user).mint()
+    await drawings.connect(user).mint(fake.cid.a)
+    expect(await drawings.connect(user).tokenURI(1)).to.eq(`ipfs://${fake.cid.a}/meta`)
+    expect(await credits.balanceOf(user.address)).to.eq(0)
+    expect(await drawings.balanceOf(user.address)).to.eq(1)
+  })
+
+  it('Updates cids', async function () {
+    const { credits, drawings, user } = await loadFixture(deployDrawings)
+    await credits.setVariable('minted', { [user.address]: oneEth })
+    await drawings.connect(user).mint(fake.cid.a)
+    await drawings.connect(user).update(1, fake.cid.b)
+    expect(await drawings.connect(user).tokenURI(1)).to.eq(`ipfs://${fake.cid.b}/meta`)
     expect(await credits.balanceOf(user.address)).to.eq(0)
     expect(await drawings.balanceOf(user.address)).to.eq(1)
   })
